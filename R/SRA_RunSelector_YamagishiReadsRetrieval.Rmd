@@ -1,0 +1,73 @@
+---
+title: "SRA RunSelector Yamagishi Reads Retrieval"
+author: "Katalina Bobowik"
+date: "11/08/2017"
+output: html_document
+---
+
+# Create text file for array- one command for each file.
+```{bash}
+
+for i in `cat /scratch/SG0008/kbobowik/SRR_Acc_List.txt`; do
+	echo fastq-dump --gzip --outdir /scratch/SG0008/SRA_Files $i
+done > SRA_ArrayTable.txt
+
+```
+
+# Retrieve samples without any extra flags using the SRA toolkit. Submit job using sbatch as an array. Note, jobs take around 30 minutes to complete with the specifications below.
+
+```{bash}
+
+#!/bin/bash
+# Created by the Melbourne Bioinformatics job script generator for SLURM
+# Mon Aug 14 2017 13:14:21 GMT+1000 (AEST)
+
+# Array set up:
+#SBATCH --array=1-122
+
+# Partition for the job:
+#SBATCH -p main
+
+# The name of the job:
+#SBATCH --job-name="SRA"
+
+# The project ID which this job should run under:
+#SBATCH --account="SG0008"
+
+# Maximum number of tasks/CPU cores used by the job:
+#SBATCH --ntasks=1
+#SBATCH --mem-per-cpu=2048
+
+# Send yourself an email when the job:
+# aborts abnormally (fails)
+#SBATCH --mail-type=FAIL
+# begins
+#SBATCH --mail-type=BEGIN
+# ends successfully
+#SBATCH --mail-type=END
+
+# Use this email address:
+#SBATCH --mail-user=katalina.bobowik@gmail.com
+
+# Export path variables.
+#SBATCH --export=ALL
+
+# The maximum running time of the job in days-hours:mins:sec
+#SBATCH --time=1:00:00
+
+# Output control:
+#SBATCH --workdir="/scratch/SG0008/kbobowik/logs/"
+#SBATCH --output="SRA_%a.log"
+
+# check that the script is launched with sbatch
+if [ "x$SLURM_JOB_ID" == "x" ]; then
+   echo "You need to submit your job to the queuing system with sbatch"
+   exit 1
+fi
+
+# Run the job from the directory where it was launched (default)
+
+# Run the simulations:
+commandToRun=`head -n ${SLURM_ARRAY_TASK_ID} /scratch/SG0008/kbobowik/SRA_ArrayTable.txt | tail -n 1`
+eval $commandToRun
+```
