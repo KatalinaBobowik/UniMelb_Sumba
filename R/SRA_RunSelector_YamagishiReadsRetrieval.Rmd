@@ -5,7 +5,7 @@ date: "11/08/2017"
 output: html_document
 ---
 
-# Create text file for array- one command for each file.
+Create text file for array- one command for each file.
 ```{bash}
 
 for i in `cat /scratch/SG0008/kbobowik/SRR_Acc_List.txt`; do
@@ -14,7 +14,7 @@ done > SRA_ArrayTable.txt
 
 ```
 
-# Retrieve samples without any extra flags using the SRA toolkit. Submit job using sbatch as an array. Note, jobs take around 30 minutes to complete with the specifications below.
+Retrieve samples without any extra flags using the SRA toolkit. Submit job using sbatch as an array. Note, jobs take around 30 minutes to complete with the specifications below.
 
 ```{bash}
 
