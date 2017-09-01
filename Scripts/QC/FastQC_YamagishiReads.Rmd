@@ -1,0 +1,20 @@
+---
+title: "FastQC Yamagishi Reads"
+author: "Katalina Bobowik"
+date: "8/23/2017"
+output: html_document
+---
+
+```{bash}
+
+for i in `cat /vlsci/SG0008/kbobowik/SRA/SRR_Acc_List.txt`; do
+  fastqc /scratch/SG0008/kbobowik/SRA_Files/${i}.fastq.gz --extract --outdir=/vlsci/SG0008/kbobowik/FastQC
+  #transpose rows and add in column for sample number
+  cut -f1 ${i}_fastqc/summary.txt | tr -s '\n' '\t' | awk -v prefix="$i\t" '{print prefix $0}' >> ~/FastQC/allRuns_summary_file.txt
+  done
+  
+# add header to file
+a=`cut -f2 ${i}_fastqc/summary.txt | tr -s '\n' '\t'`
+sed -i "1s/^/$a\n/" allRuns_summary_file.txt
+
+```

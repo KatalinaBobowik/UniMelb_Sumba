@@ -1,0 +1,32 @@
+---
+title: "Transcriptome Retrieval from Biomart"
+author: "Katalina Bobowik"
+date: "31/08/2017"
+output: html_document
+---
+
+First select the proper filters from Biomart:
+
+Filters:
+Transcript type: protein-coding
+Transcript support level: only
+
+Attributes:
+Gene stable ID
+Transcript stable ID
+Transcript support levels (TSL)
+Gencoode basic annotation
+
+Tick "Unique results only"
+
+Download this as a csv file through Biomart and filter for transcripts with tsl1, tsl2, and tsl3 support levels.
+
+```{bash}
+
+grep -E 'tsl1|tsl2|tsl3' /Users/katalinabobowik/Downloads/mart_export-1.txt | awk -F',' '{print $2}' > ~/Documents/proteinCodingTranscripts_Filtered_TranscriptIDs.txt
+
+```
+
+Next, upload the filtered text file to Biomart (tick "Input external references ID list" under filters" and select "transcript stable IDs" from the dropdown"). Tick cDNA under Attributes (Gene Stable ID and cDNA sequences are already selected).
+
+Download as compressed FASTA file
